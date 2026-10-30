@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content" />
+    <meta name="theme-color" content="#051F20" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>SAMARTH SPORTS — Owner Control Center</title>
+
+    <!-- Google Fonts for authentic athletic & executive typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet" />
+    
+    <link rel="stylesheet" href="/src/admin.css" />
+  </head>
+  <body class="admin-body">
+    <!-- AUTHENTICATION GATE / LOCK SCREEN -->
+    <div class="auth-gate-overlay" id="authGateOverlay">
+      <div class="auth-modal-card">
+        <div class="auth-badge-pill">
+          <span class="auth-pulse-dot"></span>
+          <span>OWNER ACCESS ONLY</span>
+        </div>
+        <h2 class="auth-brand-title">SAMARTH SPORTS</h2>
+        <p class="auth-brand-desc">Owner Control Center &bull; Asia/Kolkata Business Engine</p>
+
+        <form id="ownerLoginForm" class="auth-form">
+          <div class="form-group">
+            <label for="ownerEmailInput" class="form-label">Authorized Owner Email</label>
+            <div class="input-with-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              <input type="email" id="ownerEmailInput" class="form-input" placeholder="e.g. guptashivansh724@gmail.com" required autocomplete="email" />
+            </div>
+            <span class="form-hint">Must match configured Owner Allowlist</span>
+          </div>
+
+          <div class="form-group">
+            <label for="ownerPasswordInput" class="form-label">Password / Security Key</label>
+            <div class="input-with-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <input type="password" id="ownerPasswordInput" class="form-input" placeholder="Enter owner access key" required autocomplete="current-password" />
+            </div>
+          </div>
+
+          <div class="auth-error-banner" id="authErrorBanner" style="display: none;"></div>
+
+          <button type="submit" class="btn-auth-submit" id="btnAuthSubmit">
+            <span>UNLOCK DASHBOARD</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </form>
+
+        <div class="auth-security-footer">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <span>End-to-End Encrypted &bull; Server-Side Protected</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN ADMIN APP WRAPPER -->
+    <div class="admin-app-layout" id="adminAppLayout" style="display: none;">
+      <!-- DESKTOP & TABLET SIDEBAR -->
+      <aside class="admin-sidebar" id="adminSidebar">
+        <div class="sidebar-brand-block">
+          <div class="sidebar-logo-row">
+            <span class="brand-crest">S</span>
+            <div class="brand-text-col">
+              <h1 class="brand-heading">SAMARTH SPORTS</h1>
+              <span class="brand-sub">CONTROL CENTER</span>
+            </div>
+          </div>
+          <div class="shared-ground-tag">
+            <span class="ground-dot"></span>
+            <span>1 SHARED TURF</span>
+          </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="sidebar-nav" aria-label="Admin Navigation">
+          <button type="button" class="sidebar-nav-item active" data-tab="overview">
+            <div class="nav-icon-wrap">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+            </div>
+            <span>Overview</span>
+          </button>
+
+          <button type="button" class="sidebar-nav-item" data-tab="bookings">
+            <div class="nav-icon-wrap">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+            </div>
+            <span>Bookings</span>
+            <span class="sidebar-counter-badge" id="sidebarBookingCount">0</span>
+          </button>
+
+          <button type="button" class="sidebar-nav-item" data-tab="calendar">
+            <div class="nav-icon-wrap">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+            <span>Ground Calendar</span>
+          </button>
+
+          <button type="button" class="sidebar-nav-item" data-tab="blocks">
+            <div class="nav-icon-wrap">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+              </svg>
+            </div>
+            <span>Manual Blocks</span>
+            <span class="sidebar-counter-badge" id="sidebarBlockCount">0</span>
+          </button>
+
+          <button type="button" class="sidebar-nav-item" data-tab="notifications">
+            <div class="nav-icon-wrap">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+            </div>
+            <span>Live Alerts</span>
+            <span class="sidebar-counter-badge alert" id="sidebarAlertCount">0</span>
+          </button>
+
+          <button type="button" class="sidebar-nav-item" data-tab="settings">
+            <div class="nav-icon-wrap">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+            </div>
+            <span>Ground Settings</span>
+          </button>
+        </nav>
+
+        <!-- Sidebar Owner Profile Footer -->
+        <div class="sidebar-user-footer">
+          <div class="user-avatar-circle" id="sidebarAvatar">O</div>
+          <div class="user-info-col">
+            <span class="user-role-label">VERIFIED OWNER</span>
+            <span class="user-email-text" id="sidebarOwnerEmail">owner@samarthsports.com</span>
+          </div>
+          <button type="button" class="btn-sidebar-logout" id="btnSidebarLogout" title="Lock & Logout">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+          </button>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT VIEWPORT -->
+      <div class="admin-main-viewport">
+        <!-- TOP APP BAR -->
+        <header class="admin-topbar">
+          <div class="topbar-left">
+            <button type="button" class="btn-mobile-menu-toggle" id="btnMobileMenuToggle" aria-label="Toggle menu">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            </button>
+            <div class="topbar-title-block">
+              <h2 class="topbar-section-title" id="topbarSectionTitle">Overview</h2>
+              <span class="topbar-tz-indicator">Asia/Kolkata (IST) &bull; Live Synchronization</span>
+            </div>
+          </div>
+
+          <div class="topbar-actions">
+            <!-- Fast Block Slot Action -->
+            <button type="button" class="btn-topbar-action" id="btnQuickBlockModal">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+              </svg>
+              <span>Block Ground</span>
+            </button>
+
+            <!-- Realtime Bell Trigger -->
+            <button type="button" class="btn-topbar-bell" id="btnTopbarBell" aria-label="Notifications">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+              <span class="bell-alert-pip" id="bellAlertPip" style="display: none;"></span>
+            </button>
+
+            <!-- Customer Site Link -->
+            <a href="/" target="_blank" class="btn-view-customer-site" title="View Customer Site">
+              <span>Customer Site</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </a>
+          </div>
+        </header>
+
+        <!-- VIEW CONTAINER -->
+        <main class="admin-content-container" id="adminContentContainer">
+          <!-- 1. OVERVIEW VIEW -->
+          <section class="admin-view active" id="view-overview">
+            <!-- KPI Summary Cards Grid -->
+            <div class="metrics-grid">
+              <!-- KPI 1: Today's Bookings -->
+              <div class="metric-card">
+                <div class="metric-header">
+                  <span class="metric-label">TODAY'S BOOKINGS</span>
+                  <div class="metric-icon-wrap">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                  </div>
+                </div>
+                <div class="metric-value-row">
+                  <span class="metric-big-number" id="metricTodayBookings">0</span>
+                  <span class="metric-sub-badge">Slots</span>
+                </div>
+                <span class="metric-footer-note">Actual database reservations</span>
+              </div>
+
+              <!-- KPI 2: Today's Confirmed Revenue -->
+              <div class="metric-card highlight">
+                <div class="metric-header">
+                  <span class="metric-label">CONFIRMED REVENUE (TODAY)</span>
+                  <div class="metric-icon-wrap accent">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="12" y1="1" x2="12" y2="23"></line>
+                      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                  </div>
+                </div>
+                <div class="metric-value-row">
+                  <span class="metric-currency">₹</span>
+                  <span class="metric-big-number" id="metricTodayRevenue">0</span>
+                </div>
+                <span class="metric-footer-note">Verified Razorpay payments</span>
+              </div>
+
+              <!-- KPI 3: Pending Payments -->
+              <div class="metric-card">
+                <div class="metric-header">
+                  <span class="metric-label">PENDING HOLDS</span>
+                  <div class="metric-icon-wrap warning">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                  </div>
+                </div>
+                <div class="metric-value-row">
+                  <span class="metric-big-number" id="metricPendingPayments">0</span>
+                  <span class="metric-sub-badge warning">Expiring</span>
+                </div>
+                <span class="metric-footer-note">Auto-releases on timeout</span>
+              </div>
+
+              <!-- KPI 4: Upcoming Bookings -->
+              <div class="metric-card">
+                <div class="metric-header">
+                  <span class="metric-label">UPCOMING RESERVATIONS</span>
+                  <div class="metric-icon-wrap">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                  </div>
+                </div>
+                <div class="metric-value-row">
+                  <span class="metric-big-number" id="metricUpcomingBookings">0</span>
+                  <span class="metric-sub-badge">Future</span>
+                </div>
+                <span class="metric-footer-note">Confirmed upcoming matches</span>
+              </div>
+
+              <!-- KPI 5: Active Manual Blocks -->
+              <div class="metric-card">
+                <div class="metric-header">
+                  <span class="metric-label">MANUALLY BLOCKED</span>
+                  <div class="metric-icon-wrap danger">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+                    </svg>
+                  </div>
+                </div>
+                <div class="metric-value-row">
+                  <span class="metric-big-number" id="metricActiveBlocked">0</span>
+                  <span class="metric-sub-badge danger">Locks</span>
+                </div>
+                <span class="metric-footer-note">Maintenance / Private blocks</span>
+              </div>
+
+              <!-- KPI 6: Cancelled Bookings -->
+              <div class="metric-card">
+                <div class="metric-header">
+                  <span class="metric-label">CANCELLED BOOKINGS</span>
+                  <div class="metric-icon-wrap">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </div>
+                </div>
+                <div class="metric-value-row">
+                  <span class="metric-big-number" id="metricCancelledBookings">0</span>
+                  <span class="metric-sub-badge">Total</span>
+                </div>
+                <span class="metric-footer-note">Full cancellation audit history</span>
+              </div>
+            </div>
+
+            <!-- Two Column Overview Row -->
+            <div class="overview-dual-grid">
+              <!-- Column 1: Today's Shared Turf Timeline -->
+              <div class="panel-card">
+                <div class="panel-header">
+                  <div class="panel-title-col">
+                    <h3 class="panel-title">Today's Ground Activity</h3>
+                    <span class="panel-sub">1 Physical Turf &bull; Cricket & Football Consolidated</span>
+                  </div>
+                  <button type="button" class="btn-panel-action" id="btnGoToCalendar">Full Calendar &rarr;</button>
+                </div>
+                <div class="today-slots-timeline" id="todayOverviewTimeline">
+                  <!-- Dynamically populated -->
+                </div>
+              </div>
+
+              <!-- Column 2: Recent Activity & WhatsApp Integration Status -->
+              <div class="panel-card">
+                <div class="panel-header">
+                  <div class="panel-title-col">
+                    <h3 class="panel-title">Channels &amp; System Health</h3>
+                    <span class="panel-sub">Official Meta WhatsApp &bull; Database Sync</span>
+                  </div>
+                </div>
+
+                <!-- WhatsApp Status Card -->
+                <div class="integration-status-card" id="whatsappStatusBox">
+                  <div class="integration-icon-wrap whatsapp">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                    </svg>
+                  </div>
+                  <div class="integration-details-col">
+                    <div class="integration-title-row">
+                      <h4 class="integration-name">WhatsApp Business Cloud API</h4>
+                      <span class="integration-badge pending" id="whatsappBadge">CONFIG READY</span>
+                    </div>
+                    <p class="integration-desc" id="whatsappStatusDesc">
+                      Official Meta Cloud API webhook and template engine initialized. Add token in environment settings to enable live SMS/WhatsApp dispatches.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Database Live Status Card -->
+                <div class="integration-status-card">
+                  <div class="integration-icon-wrap database">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                      <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                      <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                    </svg>
+                  </div>
+                  <div class="integration-details-col">
+                    <div class="integration-title-row">
+                      <h4 class="integration-name">PostgreSQL / Supabase Engine</h4>
+                      <span class="integration-badge active" id="dbEngineBadge">CONCURRENCY SAFE</span>
+                    </div>
+                    <p class="integration-desc">
+                      Advisory-locked transactional reservations. Shared ground conflicts enforced before order creation.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2. BOOKINGS VIEW -->
+          <section class="admin-view" id="view-bookings">
+            <div class="view-header-bar">
+              <div class="view-title-block">
+                <h3 class="view-heading">Booking Management</h3>
+                <span class="view-sub">Search, filter, view payment proofs, and manage reservations</span>
+              </div>
+            </div>
+
+            <!-- Filter Controls Bar -->
+            <div class="filter-controls-card">
+              <div class="search-input-wrap">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="bookingSearchInput" class="filter-search-input" placeholder="Search by customer name, phone, or Booking ID (e.g. SS1026)..." />
+              </div>
+
+              <div class="filter-dropdowns-row">
+                <!-- Date Filter -->
+                <div class="filter-item">
+                  <label for="filterDate">Date</label>
+                  <input type="date" id="filterDate" class="filter-select" />
+                </div>
+
+                <!-- Sport Filter -->
+                <div class="filter-item">
+                  <label for="filterSport">Sport</label>
+                  <select id="filterSport" class="filter-select">
+                    <option value="all">All Sports</option>
+                    <option value="Cricket">Cricket</option>
+                    <option value="Football">Football</option>
+                  </select>
+                </div>
+
+                <!-- Booking Status Filter -->
+                <div class="filter-item">
+                  <label for="filterStatus">Booking Status</label>
+                  <select id="filterStatus" class="filter-select">
+                    <option value="all">All Statuses</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="pending_payment">Pending Payment</option>
+                    <option value="cancelled">Cancelled</option>
+                    <option value="expired">Expired</option>
+                  </select>
+                </div>
+
+                <!-- Payment Status Filter -->
+                <div class="filter-item">
+                  <label for="filterPayment">Payment</label>
+                  <select id="filterPayment" class="filter-select">
+                    <option value="all">All Payments</option>
+                    <option value="successful">Successful</option>
+                    <option value="pending">Pending</option>
+                    <option value="failed">Failed</option>
+                    <option value="refunded">Refunded</option>
+                  </select>
+                </div>
+
+                <!-- Reset Button -->
+                <button type="button" class="btn-reset-filters" id="btnResetFilters">Reset</button>
+              </div>
+            </div>
+
+            <!-- Bookings Table Container -->
+            <div class="table-responsive-container">
+              <table class="admin-data-table" id="bookingsTable">
+                <thead>
+                  <tr>
+                    <th>Booking ID</th>
+                    <th>Customer</th>
+                    <th>Sport</th>
+                    <th>Date &amp; Time</th>
+                    <th>Amount</th>
+                    <th>Payment</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="bookingsTableBody">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+              <div class="empty-table-placeholder" id="emptyBookingsPlaceholder" style="display: none;">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <p>No bookings matching current filters.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 3. SHARED GROUND AVAILABILITY CALENDAR VIEW -->
+          <section class="admin-view" id="view-calendar">
+            <div class="view-header-bar">
+              <div class="view-title-block">
+                <h3 class="view-heading">Shared Ground Availability Calendar</h3>
+                <span class="view-sub">1 Common Physical Arena &bull; Cricket &amp; Football Unified Timeline</span>
+              </div>
+              <div class="calendar-header-actions">
+                <input type="date" id="calendarDatePicker" class="calendar-date-input" />
+                <button type="button" class="btn-calendar-nav" id="btnCalPrev">&larr; Prev</button>
+                <button type="button" class="btn-calendar-nav active" id="btnCalToday">Today</button>
+                <button type="button" class="btn-calendar-nav" id="btnCalNext">Next &rarr;</button>
+              </div>
+            </div>
+
+            <!-- Color Key Legend -->
+            <div class="calendar-legend-bar">
+              <div class="legend-item">
+                <span class="legend-swatch available"></span>
+                <span>Available</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-swatch cricket"></span>
+                <span>Cricket Booked</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-swatch football"></span>
+                <span>Football Booked</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-swatch held"></span>
+                <span>Payment Hold</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-swatch blocked"></span>
+                <span>Manual Block</span>
+              </div>
+            </div>
+
+            <!-- Calendar Schedule Grid -->
+            <div class="calendar-schedule-card">
+              <div class="calendar-date-banner" id="calendarDateBanner">
+                <span class="cal-banner-date" id="calBannerDateText">Today's Schedule</span>
+                <span class="cal-banner-rule">Any reservation locks the arena for BOTH Cricket &amp; Football</span>
+              </div>
+
+              <div class="calendar-time-slots-list" id="calendarSlotsList">
+                <!-- Dynamically rendered slots -->
+              </div>
+            </div>
+          </section>
+
+          <!-- 4. MANUAL SLOT BLOCKING VIEW -->
+          <section class="admin-view" id="view-blocks">
+            <div class="view-header-bar">
+              <div class="view-title-block">
+                <h3 class="view-heading">Manual Ground Blocking</h3>
+                <span class="view-sub">Lock out the shared arena for Maintenance, Private Matches, or Reservations</span>
+              </div>
+              <button type="button" class="btn-primary-action" id="btnOpenBlockModal">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span>New Block</span>
+              </button>
+            </div>
+
+            <!-- Active Blocks List -->
+            <div class="panel-card">
+              <div class="panel-header">
+                <h4 class="panel-title">Active Ground Blocks</h4>
+                <span class="panel-sub">Applies automatically to both sports</span>
+              </div>
+              <div class="table-responsive-container">
+                <table class="admin-data-table" id="blocksTable">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Time Interval</th>
+                      <th>Reason</th>
+                      <th>Internal Note</th>
+                      <th>Blocked By</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="blocksTableBody">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+                <div class="empty-table-placeholder" id="emptyBlocksPlaceholder" style="display: none;">
+                  <p>No active manual blocks. The ground is fully available for bookings.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 5. NOTIFICATIONS VIEW -->
+          <section class="admin-view" id="view-notifications">
+            <div class="view-header-bar">
+              <div class="view-title-block">
+                <h3 class="view-heading">Live Alerts &amp; Audit Logs</h3>
+                <span class="view-sub">Real-Time Supabase WebSocket feed &bull; Meta WhatsApp logs</span>
+              </div>
+              <button type="button" class="btn-panel-action" id="btnMarkAllRead">Mark All as Read</button>
+            </div>
+
+            <div class="overview-dual-grid">
+              <!-- Live Alerts Feed -->
+              <div class="panel-card">
+                <div class="panel-header">
+                  <h4 class="panel-title">Realtime Activity Feed</h4>
+                  <span class="badge-realtime-live">LIVE</span>
+                </div>
+                <div class="notifications-feed-list" id="notificationsFeedList">
+                  <!-- Dynamically populated -->
+                </div>
+              </div>
+
+              <!-- WhatsApp Delivery Logs -->
+              <div class="panel-card">
+                <div class="panel-header">
+                  <h4 class="panel-title">WhatsApp Delivery Audit Logs</h4>
+                  <span class="panel-sub">Official Meta Platform</span>
+                </div>
+                <div class="delivery-logs-list" id="deliveryLogsList">
+                  <!-- Dynamically populated -->
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 6. SETTINGS VIEW -->
+          <section class="admin-view" id="view-settings">
+            <div class="view-header-bar">
+              <div class="view-title-block">
+                <h3 class="view-heading">Ground &amp; Pricing Configuration</h3>
+                <span class="view-sub">Configure hourly rates, operating hours, and booking constraints</span>
+              </div>
+            </div>
+
+            <form id="groundSettingsForm" class="settings-form-layout">
+              <!-- Pricing Card -->
+              <div class="settings-card">
+                <h4 class="settings-card-title">Hourly Pricing (INR)</h4>
+                <div class="settings-grid-row">
+                  <div class="form-group">
+                    <label for="cfgCricketPrice" class="form-label">Cricket Rate / Hour (₹)</label>
+                    <input type="number" id="cfgCricketPrice" class="form-input" min="100" step="50" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="cfgFootballPrice" class="form-label">Football Rate / Hour (₹)</label>
+                    <input type="number" id="cfgFootballPrice" class="form-input" min="100" step="50" required />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Operating Hours Card -->
+              <div class="settings-card">
+                <h4 class="settings-card-title">Operating Timings (Asia/Kolkata)</h4>
+                <div class="settings-grid-row">
+                  <div class="form-group">
+                    <label for="cfgOpenTime" class="form-label">Opening Time</label>
+                    <input type="time" id="cfgOpenTime" class="form-input" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="cfgCloseTime" class="form-label">Closing Time</label>
+                    <input type="time" id="cfgCloseTime" class="form-input" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="cfgSlotDuration" class="form-label">Slot Duration (Minutes)</label>
+                    <input type="number" id="cfgSlotDuration" class="form-input" value="60" min="30" step="30" required />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Booking Rules Card -->
+              <div class="settings-card">
+                <h4 class="settings-card-title">Booking Windows &amp; Expiry</h4>
+                <div class="settings-grid-row">
+                  <div class="form-group">
+                    <label for="cfgAdvanceWindow" class="form-label">Advance Booking Window (Days)</label>
+                    <input type="number" id="cfgAdvanceWindow" class="form-input" min="1" max="90" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="cfgHoldExpiry" class="form-label">Temporary Hold Expiry (Minutes)</label>
+                    <input type="number" id="cfgHoldExpiry" class="form-input" min="5" max="30" required />
+                    <span class="form-hint">Unpaid reservations auto-release after this duration</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Owner Email Allowlist -->
+              <div class="settings-card">
+                <h4 class="settings-card-title">Owner Allowlist (Comma-separated)</h4>
+                <div class="form-group">
+                  <label for="cfgAllowlist" class="form-label">Authorized Emails</label>
+                  <input type="text" id="cfgAllowlist" class="form-input" placeholder="e.g. guptashivansh724@gmail.com, owner@samarthsports.com" required />
+                  <span class="form-hint">Only these emails can authenticate into /admin</span>
+                </div>
+              </div>
+
+              <!-- WhatsApp Cloud API Settings -->
+              <div class="settings-card">
+                <h4 class="settings-card-title">Meta WhatsApp Cloud API Configuration</h4>
+                <div class="settings-grid-row">
+                  <div class="form-group">
+                    <label for="cfgWaPhoneId" class="form-label">WhatsApp Phone Number ID</label>
+                    <input type="text" id="cfgWaPhoneId" class="form-input" placeholder="From Meta Developer App" />
+                  </div>
+                  <div class="form-group">
+                    <label for="cfgWaAccount" class="form-label">WhatsApp Business Account ID</label>
+                    <input type="text" id="cfgWaAccount" class="form-input" placeholder="WABA ID" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-save-row">
+                <span class="save-status-msg" id="settingsSaveStatus"></span>
+                <button type="submit" class="btn-primary-action" id="btnSaveSettings">Save All Settings</button>
+              </div>
+            </form>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <!-- MOBILE FLOATING BOTTOM DOCK -->
+    <nav class="mobile-bottom-dock" id="mobileBottomDock" style="display: none;" aria-label="Mobile Navigation">
+      <button type="button" class="dock-item active" data-tab="overview">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+        <span>Overview</span>
+      </button>
+      <button type="button" class="dock-item" data-tab="bookings">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+        </svg>
+        <span>Bookings</span>
+      </button>
+      <button type="button" class="dock-item" data-tab="calendar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        <span>Calendar</span>
+      </button>
+      <button type="button" class="dock-item" data-tab="blocks">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+        </svg>
+        <span>Blocks</span>
+      </button>
+      <button type="button" class="dock-item" data-tab="settings">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+        <span>Settings</span>
+      </button>
+    </nav>
+
+    <!-- MODAL: MANUAL SLOT BLOCKING -->
+    <div class="admin-modal-backdrop" id="modalBlockSlot" aria-hidden="true">
+      <div class="admin-dialog-card" role="dialog" aria-modal="true" aria-labelledby="modalBlockTitle">
+        <div class="dialog-header">
+          <div class="dialog-title-col">
+            <h3 class="dialog-title" id="modalBlockTitle">Block Shared Ground</h3>
+            <span class="dialog-sub">Applies to both Cricket and Football</span>
+          </div>
+          <button type="button" class="btn-dialog-close" id="btnCloseBlockModal">&times;</button>
+        </div>
+
+        <form id="formManualBlock" class="dialog-body">
+          <div class="form-group">
+            <label for="blockDateInput" class="form-label">Block Date</label>
+            <input type="date" id="blockDateInput" class="form-input" required />
+          </div>
+
+          <div class="form-row-dual">
+            <div class="form-group">
+              <label for="blockStartTime" class="form-label">Start Time</label>
+              <input type="time" id="blockStartTime" class="form-input" required value="07:00" />
+            </div>
+            <div class="form-group">
+              <label for="blockEndTime" class="form-label">End Time</label>
+              <input type="time" id="blockEndTime" class="form-input" required value="08:00" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="blockReasonSelect" class="form-label">Reason for Lockout</label>
+            <select id="blockReasonSelect" class="form-input" required>
+              <option value="Maintenance">Maintenance &bull; Pitch Relining / Grass Care</option>
+              <option value="Private match">Private Match / Tournament</option>
+              <option value="Ground unavailable">Ground Unavailable / Weather</option>
+              <option value="Personal reservation">Personal / Club Reservation</option>
+              <option value="Other">Other Operational Reason</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="blockInternalNote" class="form-label">Internal Note (Optional)</label>
+            <textarea id="blockInternalNote" class="form-input textarea" rows="2" placeholder="Visible only to owner/staff"></textarea>
+          </div>
+
+          <div class="dialog-error-banner" id="blockErrorBanner" style="display: none;"></div>
+
+          <div class="dialog-footer-actions">
+            <button type="button" class="btn-dialog-cancel" id="btnCancelBlockModal">Cancel</button>
+            <button type="submit" class="btn-primary-action danger" id="btnSubmitBlock">Enforce Ground Lockout</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- MODAL: BOOKING DETAILS & AUDITED CANCELLATION -->
+    <div class="admin-modal-backdrop" id="modalBookingDetails" aria-hidden="true">
+      <div class="admin-dialog-card wider" role="dialog" aria-modal="true" aria-labelledby="modalBookingDetailsTitle">
+        <div class="dialog-header">
+          <div class="dialog-title-col">
+            <div class="dialog-id-pill" id="detailBookingIdPill">SS1026-001</div>
+            <h3 class="dialog-title" id="modalBookingDetailsTitle">Booking Details</h3>
+          </div>
+          <button type="button" class="btn-dialog-close" id="btnCloseBookingDetails">&times;</button>
+        </div>
+
+        <div class="dialog-body" id="bookingDetailsContent">
+          <!-- Populated dynamically -->
+        </div>
+
+        <div class="dialog-footer-actions" id="bookingDetailsFooter">
+          <button type="button" class="btn-dialog-cancel" id="btnCloseDetailsBottom">Close</button>
+          <button type="button" class="btn-dialog-cancel-booking" id="btnTriggerCancelBooking">Cancel This Booking</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/admin.js"></script>
+  </body>
+</html>
